@@ -16,7 +16,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 interface TaskDao {
 
     @RawQuery(observedEntities = [Task::class])
-    fun getTasks(query: SupportSQLiteQuery): PagingSource<Int, Task>
+    fun getTasks(query: SupportSQLiteQuery): LiveData<PagingSource<Int, Task>>
 
     @Query("SELECT * FROM tasks WHERE id = :taskId")
     fun getTaskById(taskId: Int): LiveData<Task>

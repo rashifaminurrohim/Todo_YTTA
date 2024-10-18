@@ -3,6 +3,8 @@ package com.dicoding.todoapp.data
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import com.dicoding.todoapp.utils.FilterUtils
 import com.dicoding.todoapp.utils.TasksFilterType
 
 class TaskRepository(private val tasksDao: TaskDao) {
@@ -28,8 +30,10 @@ class TaskRepository(private val tasksDao: TaskDao) {
 
     //TODO 4 : Use FilterUtils.getFilteredQuery to create filterable query
     //TODO 5 : Build PagingData with configuration
-    fun getTasks(filter: TasksFilterType): LiveData<PagingData<Task>> {
-        throw NotImplementedError("Not yet implemented")
+    fun getTasks(filter: TasksFilterType): LiveData<PagingSource<Int, Task>> {
+        val filterQuery = FilterUtils.getFilteredQuery(filter)
+        return tasksDao.getTasks(filterQuery)
+//        throw NotImplementedError("Not yet implemented")
     }
 
     fun getTaskById(taskId: Int): LiveData<Task> {
