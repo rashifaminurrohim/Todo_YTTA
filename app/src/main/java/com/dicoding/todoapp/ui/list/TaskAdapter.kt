@@ -1,6 +1,7 @@
 package com.dicoding.todoapp.ui.list
 
 import android.content.Intent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.todoapp.R
 import com.dicoding.todoapp.data.Task
+import com.dicoding.todoapp.databinding.TaskItemBinding
 import com.dicoding.todoapp.ui.detail.DetailTaskActivity
 import com.dicoding.todoapp.utils.DateConverter
 import com.dicoding.todoapp.utils.TASK_ID
@@ -20,25 +22,30 @@ class TaskAdapter(
 
     //TODO 8 : Create and initialize ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        throw NotImplementedError("Not yet implemented")
+        val binding = TaskItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TaskViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = getItem(position) as Task
         //TODO 9 : Bind data to ViewHolder (You can run app to check)
+        holder.bind(task)
         when {
             //TODO 10 : Display title based on status using TitleTextView
             task.isCompleted -> {
                 //DONE
                 holder.cbComplete.isChecked = true
+                holder.tvTitle.state = TaskTitleView.DONE
             }
             task.dueDateMillis < System.currentTimeMillis() -> {
                 //OVERDUE
                 holder.cbComplete.isChecked = false
+                holder.tvTitle.state = TaskTitleView.OVERDUE
             }
             else -> {
                 //NORMAL
                 holder.cbComplete.isChecked = false
+                holder.tvTitle.state = TaskTitleView.NORMAL
             }
         }
     }
