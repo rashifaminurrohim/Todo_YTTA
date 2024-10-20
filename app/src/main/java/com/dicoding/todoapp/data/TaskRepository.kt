@@ -2,10 +2,14 @@ package com.dicoding.todoapp.data
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
+import androidx.paging.liveData
 import com.dicoding.todoapp.utils.FilterUtils
 import com.dicoding.todoapp.utils.TasksFilterType
+import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(private val tasksDao: TaskDao) {
 
@@ -30,10 +34,17 @@ class TaskRepository(private val tasksDao: TaskDao) {
 
     //TODO 4 : Use FilterUtils.getFilteredQuery to create filterable query
     //TODO 5 : Build PagingData with configuration
-    fun getTasks(filter: TasksFilterType): LiveData<PagingSource<Int, Task>> {
+    @ExperimentalPagingApi
+    fun getTasks(filter: TasksFilterType): LiveData<PagingData<Task>> {
         val filterQuery = FilterUtils.getFilteredQuery(filter)
-        return tasksDao.getTasks(filterQuery)
-//        throw NotImplementedError("Not yet implemented")
+        val pagingSourceFactory = { tasksDao.getTasks(filterQuery) }
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = PLACEHOLDERS
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).liveData
     }
 
     fun getTaskById(taskId: Int): LiveData<Task> {
@@ -44,7 +55,7 @@ class TaskRepository(private val tasksDao: TaskDao) {
         return tasksDao.getNearestActiveTask()
     }
 
-    suspend fun insertTask(newTask: Task): Long{
+    suspend fun insertTask(newTask: Task): Long {
         return tasksDao.insertTask(newTask)
     }
 

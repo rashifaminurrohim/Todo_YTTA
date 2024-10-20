@@ -1,6 +1,7 @@
 package com.dicoding.todoapp.ui.list
 
 import androidx.lifecycle.*
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import com.dicoding.todoapp.R
 import com.dicoding.todoapp.data.Task
@@ -9,6 +10,7 @@ import com.dicoding.todoapp.utils.Event
 import com.dicoding.todoapp.utils.TasksFilterType
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagingApi::class)
 class TaskViewModel(private val taskRepository: TaskRepository) : ViewModel() {
 
     private val _filter = MutableLiveData<TasksFilterType>()
