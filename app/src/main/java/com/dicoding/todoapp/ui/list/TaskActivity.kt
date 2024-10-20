@@ -35,14 +35,14 @@ class TaskActivity : AppCompatActivity() {
         setContentView(R.layout.activity_task)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
+        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             val addIntent = Intent(this, AddTaskActivity::class.java)
             startActivity(addIntent)
         }
 
         //TODO 6 : Initiate RecyclerView with LayoutManager, Adapter, and update database when onCheckChange
         val layoutManager = LinearLayoutManager(this)
-        val recycler = findViewById<RecyclerView>(R.id.rv_task)
+        recycler = findViewById(R.id.rv_task)
         recycler.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         recycler.addItemDecoration(itemDecoration)
@@ -50,7 +50,7 @@ class TaskActivity : AppCompatActivity() {
         initAction()
 
         val factory = ViewModelFactory.getInstance(this)
-        taskViewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
+        taskViewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java]
 
         taskViewModel.tasks.observe(this, Observer(this::updateData))
 
@@ -59,6 +59,12 @@ class TaskActivity : AppCompatActivity() {
 
     private fun updateData(task: PagingData<Task>) {
         //TODO 7 : Submit PagingData to adapter
+        taskAdapter = TaskAdapter { taskStatus, isCompleted ->
+            taskViewModel.completeTask(taskStatus, isCompleted)
+        }
+        recycler.adapter = taskAdapter
+        taskAdapter.submitData(lifecycle, task)
+
     }
 
     private fun showSnackBar(eventMessage: Event<Int>) {
