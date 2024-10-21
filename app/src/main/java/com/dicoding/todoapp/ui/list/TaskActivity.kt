@@ -19,7 +19,9 @@ import com.dicoding.todoapp.data.Task
 import com.dicoding.todoapp.setting.SettingsActivity
 import com.dicoding.todoapp.ui.ViewModelFactory
 import com.dicoding.todoapp.ui.add.AddTaskActivity
+import com.dicoding.todoapp.ui.detail.DetailTaskActivity
 import com.dicoding.todoapp.utils.Event
+import com.dicoding.todoapp.utils.TASK_ID
 import com.dicoding.todoapp.utils.TasksFilterType
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -35,10 +37,14 @@ class TaskActivity : AppCompatActivity() {
         setContentView(R.layout.activity_task)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        val factory = ViewModelFactory.getInstance(this)
+        taskViewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java]
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             val addIntent = Intent(this, AddTaskActivity::class.java)
             startActivity(addIntent)
         }
+        taskViewModel.tasks.observe(this, Observer(this::updateData))
 
         //TODO 6 : Initiate RecyclerView with LayoutManager, Adapter, and update database when onCheckChange
         val layoutManager = LinearLayoutManager(this)
@@ -46,25 +52,30 @@ class TaskActivity : AppCompatActivity() {
         recycler.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         recycler.addItemDecoration(itemDecoration)
+        taskAdapter = TaskAdapter { taskStatus, isCompleted ->
+            taskViewModel.completeTask(taskStatus, isCompleted)
+        }
+        recycler.adapter = taskAdapter
+        onClickTask()
 
         initAction()
-
-        val factory = ViewModelFactory.getInstance(this)
-        taskViewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java]
-
-        taskViewModel.tasks.observe(this, Observer(this::updateData))
-
         //TODO 15 : Fixing bug : snackBar not show when task completed
     }
 
     private fun updateData(task: PagingData<Task>) {
         //TODO 7 : Submit PagingData to adapter
-        taskAdapter = TaskAdapter { taskStatus, isCompleted ->
-            taskViewModel.completeTask(taskStatus, isCompleted)
-        }
-        recycler.adapter = taskAdapter
         taskAdapter.submitData(lifecycle, task)
+    }
 
+    private fun onClickTask() {
+        taskAdapter.setOnItemClickCallBack(object : TaskAdapter.OnItemClickCallback {
+            override fun onItemClicked(task: Task) {
+                Intent(this@TaskActivity, DetailTaskActivity::class.java).apply {
+                    putExtra(TASK_ID, task.id)
+                    startActivity(this)
+                }
+            }
+        })
     }
 
     private fun showSnackBar(eventMessage: Event<Int>) {
