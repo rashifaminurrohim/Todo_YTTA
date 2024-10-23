@@ -9,7 +9,6 @@ import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.dicoding.todoapp.utils.FilterUtils
 import com.dicoding.todoapp.utils.TasksFilterType
-import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(private val tasksDao: TaskDao) {
 

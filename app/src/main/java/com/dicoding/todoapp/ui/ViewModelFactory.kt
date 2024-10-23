@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.todoapp.data.TaskRepository
-import com.dicoding.todoapp.setting.SettingsViewModel
 import com.dicoding.todoapp.ui.add.AddTaskViewModel
 import com.dicoding.todoapp.ui.detail.DetailTaskViewModel
 import com.dicoding.todoapp.ui.list.TaskViewModel
@@ -35,9 +34,6 @@ class ViewModelFactory private constructor(private val taskRepository: TaskRepos
             }
             modelClass.isAssignableFrom(AddTaskViewModel::class.java) -> {
                 AddTaskViewModel(taskRepository) as T
-            }
-            modelClass.isAssignableFrom(SettingsViewModel::class.java) -> {
-                SettingsViewModel(taskRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
