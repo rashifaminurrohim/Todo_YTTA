@@ -43,6 +43,7 @@
 
         <ImageButton
             style="@style/Base.Widget.AppCompat.ImageButton"
+            android:id="@+id/ib_datePicker"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:contentDescription="@string/due_date"
