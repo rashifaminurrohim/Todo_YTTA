@@ -35,7 +35,6 @@ class DetailTaskActivity : AppCompatActivity() {
                 deleteTask(it)
             }
         }
-        
     }
 
     private fun showDetailTask(task: Task) {
