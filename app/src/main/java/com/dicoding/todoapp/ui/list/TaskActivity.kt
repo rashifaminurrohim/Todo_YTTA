@@ -60,6 +60,7 @@ class TaskActivity : AppCompatActivity() {
 
         initAction()
         //TODO 15 : Fixing bug : snackBar not show when task completed
+        taskViewModel.snackbarText.observe(this, Observer(this::showSnackBar))
     }
 
     private fun updateData(task: PagingData<Task>) {
