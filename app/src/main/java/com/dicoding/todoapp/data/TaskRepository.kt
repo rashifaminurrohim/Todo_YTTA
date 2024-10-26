@@ -50,8 +50,8 @@ class TaskRepository(private val tasksDao: TaskDao) {
         return tasksDao.getTaskById(taskId)
     }
 
-    fun getNearestActiveTask(): Task {
-        return tasksDao.getNearestActiveTask()
+    fun getNearestActiveTask(currentTimeMillis: Long): Task {
+        return tasksDao.getNearestActiveTask(currentTimeMillis)
     }
 
     suspend fun insertTask(newTask: Task): Long {

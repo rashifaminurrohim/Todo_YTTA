@@ -49,7 +49,8 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
     }
 
     private fun getNearestActiveTask(switchValue: Boolean): Result {
-        val nearestTask = taskRepository.getNearestActiveTask()
+        val currentTimeMillis = System.currentTimeMillis()
+        val nearestTask = taskRepository.getNearestActiveTask(currentTimeMillis)
         val pendingIntent = getPendingIntent(nearestTask)
         val notifyManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
