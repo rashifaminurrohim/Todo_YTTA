@@ -66,6 +66,7 @@ class TaskActivity : AppCompatActivity() {
     private fun updateData(task: PagingData<Task>) {
         //TODO 7 : Submit PagingData to adapter
         taskAdapter.submitData(lifecycle, task)
+
     }
 
     private fun onClickTask() {
@@ -116,8 +117,12 @@ class TaskActivity : AppCompatActivity() {
             setOnMenuItemClickListener {
                 taskViewModel.filter(
                     when (it.itemId) {
-                        R.id.active -> TasksFilterType.ACTIVE_TASKS
-                        R.id.completed -> TasksFilterType.COMPLETED_TASKS
+                        R.id.active -> {
+                            TasksFilterType.ACTIVE_TASKS
+                        }
+                        R.id.completed -> {
+                            TasksFilterType.COMPLETED_TASKS
+                        }
                         else -> TasksFilterType.ALL_TASKS
                     }
                 )

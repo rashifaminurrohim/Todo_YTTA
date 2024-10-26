@@ -14,7 +14,6 @@ import androidx.work.WorkerParameters
 import com.dicoding.todoapp.R
 import com.dicoding.todoapp.data.Task
 import com.dicoding.todoapp.data.TaskRepository
-import com.dicoding.todoapp.ui.ViewModelFactory
 import com.dicoding.todoapp.ui.detail.DetailTaskActivity
 import com.dicoding.todoapp.utils.DateConverter
 import com.dicoding.todoapp.utils.NOTIFICATION_CHANNEL_ID
@@ -52,7 +51,7 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
     private fun getNearestActiveTask(switchValue: Boolean): Result {
         val nearestTask = taskRepository.getNearestActiveTask()
         val pendingIntent = getPendingIntent(nearestTask)
-        val notifManager =
+        val notifyManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val builder: NotificationCompat.Builder =
             NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
@@ -72,9 +71,9 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             builder.setChannelId(NOTIFICATION_CHANNEL_ID)
-            notifManager.createNotificationChannel(channel)
+            notifyManager.createNotificationChannel(channel)
         }
-        notifManager.notify(1, builder.build())
+        notifyManager.notify(1, builder.build())
         return Result.success()
     }
 }

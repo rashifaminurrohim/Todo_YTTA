@@ -34,15 +34,15 @@ abstract class TaskDatabase : RoomDatabase() {
                     TaskDatabase::class.java,
                     "task.db"
                 ).addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        INSTANCE?.let { taskDatabase ->
-                            CoroutineScope(Dispatchers.IO).launch {
-                                fillWithStartingData(context, taskDatabase.taskDao())
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            INSTANCE?.let { taskDatabase ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    fillWithStartingData(context, taskDatabase.taskDao())
+                                }
                             }
                         }
-                    }
-                }).build()
+                    }).build()
                 INSTANCE = instance
                 instance
             }
