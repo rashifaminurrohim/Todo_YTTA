@@ -6,16 +6,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import androidx.work.Data
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.dicoding.todoapp.R
 import com.dicoding.todoapp.notification.NotificationWorker
-import com.dicoding.todoapp.ui.ViewModelFactory
 import com.dicoding.todoapp.utils.NOTIFICATION_CHANNEL_ID
 import java.util.concurrent.TimeUnit
 
@@ -68,13 +66,13 @@ class SettingsActivity : AppCompatActivity() {
                         .putString(NOTIFICATION_CHANNEL_ID, channelName)
                         .build()
 
-                    val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+                    val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS)
                         .setInputData(data)
                         .build()
 
-                    workManager.enqueueUniqueWork(
+                    workManager.enqueueUniquePeriodicWork(
                         channelName,
-                        ExistingWorkPolicy.REPLACE,
+                        ExistingPeriodicWorkPolicy.KEEP,
                         workRequest
                     )
                 }
